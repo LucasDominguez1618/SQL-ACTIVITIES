@@ -1,0 +1,5 @@
+Mostrar los títulos de los discos de "Deep Purple"
+
+
+SELECT title from albums  
+WHERE ArtistId IN (SELECT ArtistId from artists WHERE name LIKE "%deep purple%" )
