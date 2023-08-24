@@ -1,0 +1,25 @@
+
+
+Borrar un lenguaje cualquiera menos el inglés.
+
+DELETE FROM language WHERE language_id NOT IN (SELECT language_id from film)
+
+Borrar los lenguajes que no aparecen en ninguna película.
+
+DELETE FROM language WHERE language_id NOT IN (SELECT language_id FROM film)
+
+Borrar todas las ciudades que no tienen direcciones y luego todos los países que no tienen ciudades.
+
+DELETE FROM city WHERE city_id not in (SELECT DISTINCT city_id FROM address);
+DELETE FROM country WHERE country_id not in (SELECT country_id FROM city)
+
+Borrar la categoría “Horror”, pensar que cosas habría que hacer primero para poder borrarla.
+
+DELETE FROM film_category WHERE category_id = (SELECT category_id FROM category WHERE name LIKE '%Horror%')
+
+Borrar al actor Matthew Johansson, pensar qué cosa habría que borrar primero para poder borrarlo.
+
+DELETE FROM film_actor WHERE actor_id =
+(SELECT actor_id FROM actor WHERE first_name LIKE 'Matthew') AND (SELECT actor_id FROM actor WHERE last_name LIKE 'Johansson');
+DELETE FROM actor WHERE actor_id =
+(SELECT actor_id FROM actor WHERE first_name LIKE 'Matthew') AND (SELECT actor_id FROM actor WHERE last_name LIKE 'Johansson')
