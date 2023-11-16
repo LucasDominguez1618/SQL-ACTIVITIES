@@ -1,0 +1,37 @@
+Lo hice En postgres
+--Crear una vista (VIEW) que muestre de cada alquiler, su duración, 
+--el nombre completo del cliente, el nombre de la película y la fecha de alquiler.
+CREATE VIEW alquileres AS
+SELECT f.title as titulo,c.first_name,c.last_name,rental_date,rental_duration FROM 
+film f JOIN inventory i USING (film_id)
+JOIN rental r USING(inventory_id)
+JOIN customer c USING (customer_id)
+--Elegir una actor o actriz que no esté en el sistema y agregarlo, 
+--junto con al menos tres películas en las que haya participado. 
+-- No es necesario agregar los otros actores/actrices de esa película
+INSERT INTO "actor"(actor_id,first_name,last_name) values (1000,'Ricardo','Darin')
+INSERT INTO "language"(language_id,name) values (7,'Español');
+INSERT INTO "film" (film_id,title,release_year,length,rating,language_id) values (10000,'Argentina 1985',2022,140,'R',7)
+INSERT INTO "film" (film_id,title,release_year,length,rating,language_id) values (10001,'Relatos Salvajes',2014,140,'R',7)
+INSERT INTO "film" (film_id,title,release_year,length,rating,language_id) values (10002,'Nueve Reinas',2000,140,'R',7)
+INSERT INTO "film_actor"(actor_id,film_id) values (1000,10000)
+INSERT INTO "film_actor"(actor_id,film_id) values (1000,10001)
+INSERT INTO "film_actor"(actor_id,film_id) values (1000,10002)
+
+--Por cuestiones de privacidad se decidió borrar todos los emails de los clientes, escriba una consulta en SQL para lograr esto.
+
+UPDATE staff set email = NULL 
+
+--En la tabla de empleados, se quieren resetear los usuarios y claves.  
+--Poner el apellido como nombre de usuario y "1234" como clave.
+
+UPDATE staff SET username = last_name, password = 1234
+
+--Agregar a todos los empleados como clientes del sistema. 
+VALUES (20000,(SELECT first_name FROM staff limit 1),(SELECT last_name FROM staff limit 1),
+(SELECT email FROM staff limit 1),(SELECT address_id FROM staff WHERE staff_id = 1),(1));
+INSERT INTO "customer" (customer_id,first_name,last_name,email,address_id,store_id)
+VALUES (20001,(SELECT first_name FROM staff limit 1 offset 1),(SELECT last_name FROM staff limit 1 offset 1),
+(SELECT email FROM staff limit 1 offset 1),(SELECT address_id FROM staff WHERE staff_id = 2),(1))
+--Borrar todos los clientes que no tengan alquleres (rentals)
+DELETE FROM customer WHERE customer_id NOT IN (SELECT DISTINCT customer_id FROM rental )
